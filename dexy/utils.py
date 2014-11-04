@@ -21,7 +21,10 @@ def copy_or_link(data, destination, use_links=True, read_only_links=True):
     if is_windows or not use_links:
         data.output_to_file(destination)
     else:
-        os.link(data.storage.data_file(), destination)
+        try:
+            os.link(data.storage.data_file(), destination)
+        except OSError:
+            data.output_to_file(destination)
 
 defaults = {
     'artifacts_dir' : '.dexy',
